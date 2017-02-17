@@ -1,72 +1,7 @@
 page-chat-modal {
-    .messages {
-	margin:0;
-	padding:0;
-	list-style-type:none;
-}
-
-    .messages li {
-        display:block;
-        clear:both;
-        width: calc(100vw - 250px);
-        margin:0 0 1rem 0;
-        padding:0;
-        overflow: hidden;
-    }
-
-    .messages li h2 {
-        font-size:1.275rem;
-    }
-
-    .messages li span {
-        font-size:.975rem;
-        float:right;
-        padding-right: 10px;
-    }
-
-    .messages p {
-        border-radius:.75rem;
-        background:#e6e5eb;
-        color:#383641;
-        padding:.6875rem;
-        margin:0;
-        font-size:.875rem;
-    }
-
-    .messages img {
-        display:block;
-        max-width:65%;
-        border-radius:.75rem;
-    }
-
-    .messages li.mine {
-        float:right;
-    }
-
-    .messages li.mine img {
-        float:right;
-    }
-
-    .messages li.mine p {
-        background:#158ffe;
-        color:#fff;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     .answer {
-        max-width: 500px;
+        max-width: 250px;
         overflow: hidden;
         clear: both;
     }

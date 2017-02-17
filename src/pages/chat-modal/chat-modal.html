@@ -23,7 +23,16 @@
   <ol>
     <li *ngFor="let m of messages" class="answer {{m.UserID == localUser.ID ? 'right' : 'left'}}">
       <p class="name">{{m.Username}}</p>
-      <p class="text">{{m.Text}}</p>
+
+      <p *ngIf="isMedia(m.Text)" class="text" >
+        <!--<ion-img width="50px" height="50px" src="catchMediaSource(m.Text)"></ion-img>-->
+        > {{catchMediaSource(m.Text)}}
+      </p>
+
+      <p *ngIf="!isMedia(m.Text)" class="text" >
+        {{m.Text}}
+      </p>
+
       <p class="time">{{m.Date|date:'H:mm'}}</p>
     </li>
   </ol>
