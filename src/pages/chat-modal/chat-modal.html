@@ -21,12 +21,11 @@
 
 <ion-content padding>
   <ol>
-    <li *ngFor="let m of messages" class="answer {{m.UserID == localUser.ID ? 'right' : 'left'}}">
+    <li *ngFor="let m of messages;trackBy:identify" class="answer {{m.UserID == localUser.ID ? 'right' : 'left'}} {{m.Sent == false ? 'sending': ''}}">
       <p class="name">{{m.Username}}</p>
 
       <p *ngIf="isMedia(m.Text)" class="text" >
-        <!--<ion-img width="50px" height="50px" src="catchMediaSource(m.Text)"></ion-img>-->
-        > {{catchMediaSource(m.Text)}}
+        <ion-img width="100px" height="100px" src="catchMediaSource(m.Text)"></ion-img>
       </p>
 
       <p *ngIf="!isMedia(m.Text)" class="text" >
@@ -45,7 +44,7 @@
     </ion-item>
 
     <ion-buttons right>
-      <button [disabled]="txtChat.value.length==0" ion-button>
+      <button [disabled]="txtChat.value.length==0" ion-button (click)="sendMessage(txtChat)">
         <ion-icon name="send"></ion-icon>
       </button>
     </ion-buttons>

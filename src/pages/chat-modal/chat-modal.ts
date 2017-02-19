@@ -1,3 +1,4 @@
+import { SocketService } from './../../providers/socket.service';
 import { UserService } from './../../providers/user-service';
 import { User } from './../../models/user.model';
 import { Message } from './../../models/message.model';
@@ -26,20 +27,28 @@ export class ChatModalPage {
   messages: Message[];
   localUser: User;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController, private channelService: ChannelService, private userService: UserService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController, private channelService: ChannelService, private userService: UserService, public socketService: SocketService) {
     this.channel = navParams.get('channel');
+    //this.socketService.get();
     
     this.localUser = new User(0, "", "", "");
 
+    //Get local user
     this.userService.getLocalUser()
       .then((user: User) => this.localUser = user);
 
+    //Get channel messages
     this.channelService.getChannelMessages(this.channel)
       .then((messages: Message[]) => {
         this.messages = messages;
-        //setTimeout(() =>  this.content.scrollToBottom(), 1000);
+        setTimeout(() =>  this.content.scrollToBottom(), 500);
       });
+
+     this.socketService.getOnlineUsers(this.channel.ID);
+
+     this.socketService.socket.on("userGroupMessage", (message) => this.onGroupMessageReceive(message));
   }
+
 
   close(){
     this.viewCtrl.dismiss();
@@ -77,8 +86,60 @@ export class ChatModalPage {
     return src;
   }
 
-  sendMessage(){
-
+  identify(index, item) {
+    return item.ID;
   }
 
+  sendMessage(txtChat){
+    //console.log("> MSG: " + txtChat.value);
+    let msg = txtChat.value;
+    txtChat.value = '';
+    
+    var date = new Date();
+    
+    let message = new Message(
+      date.getMilliseconds(),
+      this.localUser.ID,
+      this.localUser.Username,
+      msg,
+      date.toString(),
+      false
+    );
+
+    this.messages.push(message);
+
+    this.socketService.sendGroupMessage(this.localUser, this.channel.ID, msg, date.getMilliseconds());
+    setTimeout(() =>  this.content.scrollToBottom(), 200);
+  }
+
+
+  //EVENTS
+  private onGroupMessageReceive(message){
+
+    //Self message
+    if (message.UserID == this.localUser.ID)
+    {
+        let msg = this.messages.find(m => m.ID == message.ContentID);
+
+        if (msg != undefined)
+        {
+          msg.ID = message.MessageID;
+          msg.Sent = true;
+        }
+    }
+    else {
+
+      let msg = new Message(
+        message.MessageID,
+        message.UserID,
+        message.Username,
+        message.Message,
+        message.Date
+      );
+
+      this.messages.push(msg);
+
+      setTimeout(() =>  this.content.scrollToBottom(), 200);
+    }
+  }
 }

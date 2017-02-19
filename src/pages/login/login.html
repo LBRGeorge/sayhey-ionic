@@ -1,0 +1,47 @@
+<!--
+  Generated template for the Login page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Login</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4 col-md-4 col-md-offset-4">
+        <div class="logo">SayHey!</div>
+      </div>
+    </div>
+    <hr class="line-anim">
+
+    <div class="row">
+      <ion-list class="form-signin">
+        <h4 class="form-signin-heading" style="font-size: 1.1em" text-center>Entre com sua conta</h4>
+
+        <ion-item>
+				  <ion-label class="sr-only" floating>Usuário</ion-label>
+				  <ion-input #txtUsername type="text" class="form-control" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="sr-only" floating>Senha</ion-label>
+          <ion-input #txtPassword type="password" class="form-control" required></ion-input>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2 col-md-offset-5" text-center>
+        <button ion-button [disabled]="txtUsername.value.length==0 || txtPassword.value.length==0" class="btn btn-lg btn-primary btn-block" style="background: #7BB557" (click)="doLogin(txtUsername.value, txtPassword.value, this, txtPassword)">Entrar</button>
+      </div>
+    </div>
+  </div>
+</ion-content>

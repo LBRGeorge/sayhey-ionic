@@ -7,6 +7,7 @@ export class Message {
         public UserID: number,
         public Username: string,
         public Text: string,
-        public Date: string
+        public Date: string,
+        public Sent: boolean = true
     ) {}
 }

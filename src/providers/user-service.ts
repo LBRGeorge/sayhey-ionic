@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { User } from './../models/user.model';
 import { Channel } from './../models/channel.model';
 import { Injectable } from '@angular/core';
@@ -16,36 +17,95 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class UserService {
 
-  user_id = 1;
-  user_token = "ZDC2HGbkJn67wrCq72aZ6D3SLEDgBLNsrdP3tKKYTjcWsvLU4hLwNDSjSpbuYHRFbnFD97NXnpcJG2vRyeWEtrfKWUgv8a3RJfsf";
+  //user_id = 1;
+  //user_token = "ZDC2HGbkJn67wrCq72aZ6D3SLEDgBLNsrdP3tKKYTjcWsvLU4hLwNDSjSpbuYHRFbnFD97NXnpcJG2vRyeWEtrfKWUgv8a3RJfsf";
   baseUri: string;
 
-  constructor(public http: Http) {
+  constructor(public http: Http, public storage: Storage) {
     this.baseUri = "http://chat.lbr-gang.com/";
+
+  }
+
+  getStorage(): Promise<any> {
+    return this.storage.get("user_id")
+          .then((userID) => {
+            return this.storage.get("user_token")
+              .then((userToken) => {
+                return {user_id: userID, user_token: userToken};
+              })
+              .catch(error => console.log("Error on get user token", error))
+          })
+          .catch(error => console.log("Error on get user id", error));
+  }
+
+  userLogin(username: string, password: string): Promise<boolean> {
+    let _headers = new Headers();
+    //_headers.append("Access-Control-Allow-Headers", "*");
+    _headers.append("Content-Type", "application/json");
+
+    return this.http.get(this.baseUri + "?api=login&textUsername=" + username + "&textPassword=" + password + "&app")
+            .toPromise()
+            .then((response) => {
+              let data: any = response.json();
+
+              if (data.Error.length > 0)
+              {
+                console.log("Login Error: " + data.Error);
+                return false;
+              }
+              else {
+                this.storage.set("user_id", data.user_id);
+                this.storage.set("user_token", data.user_token);
+                return true;
+              }
+            })
+          .catch(error => console.log("Error ao realizar login ", error));
   }
 
   getLocalUser(): Promise<User>{
     
-    return this.http.get(this.baseUri + "?api=getuserinfo&userid=" + this.user_id + "&token=" + this.user_token)
-      .toPromise()
-      .then(response => response.json().User as User)
-      .catch(error => console.log("Erro ao autenticar usuário", error));
+    return this.getStorage()
+      .then((data: any) => {
+        
+        return this.http.get(this.baseUri + "?api=getuserinfo&userid=" + data.user_id + "&token=" + data.user_token)
+          .toPromise()
+          .then(response => {
+            let user: any = response.json().User;
+
+            if (user != undefined) return user as User;
+            else return undefined;
+          })
+          .catch(error => console.log("Erro ao autenticar usuário", error));
+      });
   }
 
-  getUser(id: number): Promise<User>{
+  /*getUser(id: number): Promise<User>{
     let headers = new Headers();
     headers.append("Content-Type", "application/json");
 
     return this.http.post(this.baseUri + "?api=getuserinfo&userid=" + this.user_id + "&token=" + this.user_token, JSON.stringify({target: id}), {headers: headers})
       .toPromise()
-      .then(response => response.json().User as User)
+      .then(response => {
+        let user: any = response.json().User;
+
+        if (user != undefined) return user as User;
+        else return undefined;
+      })
       .catch(error => console.log("Erro ao autenticar usuário", error));
-  }
+  }*/
 
   getUserChannels(): Promise<Channel[]>{
-    return this.http.get(this.baseUri + "?api=getusergroups&userid=" + this.user_id + "&token=" + this.user_token)
-      .toPromise()
-      .then(response => response.json().Channels as Channel[])
-      .catch(error => console.log("Erro ao autenticar usuário", error));
+    return this.getStorage()
+      .then((data) => {
+        return this.http.get(this.baseUri + "?api=getusergroups&userid=" + data.user_id + "&token=" + data.user_token)
+          .toPromise()
+          .then(response => {
+            let channels = response.json().Channels;
+
+            if (channels != undefined) return channels as Channel[]
+            return new Array<Channel>();
+          })
+          .catch(error => console.log("Erro ao autenticar usuário", error));
+      });
   }
 }

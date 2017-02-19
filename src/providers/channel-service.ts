@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { Message } from './../models/message.model';
 import { Channel } from './../models/channel.model';
 import { Injectable } from '@angular/core';
@@ -17,19 +18,33 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class ChannelService {
 
-  user_id = 1;
-  user_token = "ZDC2HGbkJn67wrCq72aZ6D3SLEDgBLNsrdP3tKKYTjcWsvLU4hLwNDSjSpbuYHRFbnFD97NXnpcJG2vRyeWEtrfKWUgv8a3RJfsf";
   baseUri: string;
 
-  constructor(public http: Http) {
+  constructor(public http: Http, public storage: Storage) {
     this.baseUri = "http://chat.lbr-gang.com/";
   }
 
+  getStorage(): Promise<any> {
+    return this.storage.get("user_id")
+          .then((userID) => {
+            return this.storage.get("user_token")
+              .then((userToken) => {
+                return {user_id: userID, user_token: userToken};
+              })
+              .catch(error => console.log("Error on get user token", error))
+          })
+          .catch(error => console.log("Error on get user id", error));
+  }
+
   getChannelMessages(channel: Channel): Promise<Message[]>{
-    return this.http.get(this.baseUri + "?api=getgroupmessages&groupID="+channel.ID+"&userid=" + this.user_id + "&token=" + this.user_token)
-      .toPromise()
-      .then((response) => response.json().Messages as Message[],
-             error => console.log("Error ao tentar obter mensagens", error));
+
+    return this.getStorage()
+      .then((data) => {
+        return this.http.get(this.baseUri + "?api=getgroupmessages&groupID="+channel.ID+"&userid=" + data.user_id + "&token=" + data.user_token)
+          .toPromise()
+          .then((response) => response.json().Messages as Message[],
+                error => console.log("Error ao tentar obter mensagens", error));
+      });
   }
 
   /*getAll(): void {
