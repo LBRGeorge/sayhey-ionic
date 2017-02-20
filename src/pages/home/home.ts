@@ -30,6 +30,7 @@ export class HomePage {
       {
         this.navCtrl.setRoot(LoginPage);
       }
+      else this.socketService.start();
     })
     .catch(error => console.log("Error ", error));
 

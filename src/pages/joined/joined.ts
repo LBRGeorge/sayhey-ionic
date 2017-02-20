@@ -26,9 +26,19 @@ export class JoinedPage implements OnInit {
       .then((channels: Channel[]) => this.channels = channels);
   }
 
+  ionViewDidEnter() {
+    this.userService.getUserChannels()
+      .then((channels: Channel[]) => this.channels = channels);
+  }
+
   openChat(channel: Channel): void{
     let modal = this.modalCtrl.create(ChatModalPage, {channel: channel});
 
+    modal.onDidDismiss(() => {
+      this.userService.getUserChannels()
+      .then((channels: Channel[]) => this.channels = channels);
+    });
+    
     modal.present();
   }
 

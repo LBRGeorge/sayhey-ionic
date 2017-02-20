@@ -6,13 +6,17 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>channels</ion-title>
+  <ion-navbar color="primary">
+    <ion-title>Channels</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content padding class="card-background-page">
+  <ion-card *ngFor="let c of channels" (click)="joinChannel(c)">
+    <img src="{{c.Image}}"/>
+    <div class="card-title">{{c.Name}}</div>
+    <div class="card-subtitle">{{c.Users.length}} membros</div>
+  </ion-card>
 </ion-content>

@@ -62,6 +62,13 @@ export class UserService {
           .catch(error => console.log("Error ao realizar login ", error));
   }
 
+  userRegister(email: string, username: string, password: string): Promise<any> {
+    return this.http.get(this.baseUri + "?api=register&textRegisterEmail=" + email + "&textRegisterUsername=" + username + "&textRegisterPassword=" + password)
+      .toPromise()
+      .then((response) => response.json())
+      .catch(error => console.log("Error ao realizar cadastro ", error));
+  }
+
   getLocalUser(): Promise<User>{
     
     return this.getStorage()
@@ -79,21 +86,6 @@ export class UserService {
       });
   }
 
-  /*getUser(id: number): Promise<User>{
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    return this.http.post(this.baseUri + "?api=getuserinfo&userid=" + this.user_id + "&token=" + this.user_token, JSON.stringify({target: id}), {headers: headers})
-      .toPromise()
-      .then(response => {
-        let user: any = response.json().User;
-
-        if (user != undefined) return user as User;
-        else return undefined;
-      })
-      .catch(error => console.log("Erro ao autenticar usuário", error));
-  }*/
-
   getUserChannels(): Promise<Channel[]>{
     return this.getStorage()
       .then((data) => {
@@ -104,6 +96,21 @@ export class UserService {
 
             if (channels != undefined) return channels as Channel[]
             return new Array<Channel>();
+          })
+          .catch(error => console.log("Erro ao autenticar usuário", error));
+      });
+  }
+
+  joinUserChannel(channel: Channel): Promise<boolean> {
+    return this.getStorage()
+      .then((data) => {
+        return this.http.get(this.baseUri + "?api=joingroup&groupID=" + channel.ID + "&userid=" + data.user_id + "&token=" + data.user_token)
+          .toPromise()
+          .then(response => {
+            let result = response.json();
+
+            if (result.Error.length > 0) return false;
+            else return true;
           })
           .catch(error => console.log("Erro ao autenticar usuário", error));
       });

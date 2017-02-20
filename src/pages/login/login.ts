@@ -1,3 +1,4 @@
+import { RegisterPage } from './../register/register';
 import { HomePage } from './../home/home';
 import { UserService } from './../../providers/user-service';
 import { Component } from '@angular/core';
@@ -47,6 +48,10 @@ export class LoginPage {
           alert.present();
         }
       });
+  }
+
+  openRegister(){
+    this.navCtrl.push(RegisterPage);
   }
 
 }

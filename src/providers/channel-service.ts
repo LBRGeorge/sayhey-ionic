@@ -47,8 +47,14 @@ export class ChannelService {
       });
   }
 
-  /*getAll(): void {
-    this.http.get(this.baseUri + "?api=getmyinfo&userid=")
-  }*/
+  getAllChannels(): Promise<Channel[]> {
+    return this.getStorage()
+      .then((data) => {
+        return this.http.get(this.baseUri + "?api=getgroups&userid=" + data.user_id + "&token=" + data.user_token)
+          .toPromise()
+          .then((response) => response.json().Groups as Channel[],
+                error => console.log("Error ao tentar obter canais", error)); 
+      });
+  }
 
 }

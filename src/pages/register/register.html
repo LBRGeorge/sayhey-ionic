@@ -1,5 +1,5 @@
 <!--
-  Generated template for the Login page.
+  Generated template for the Register page.
 
   See http://ionicframework.com/docs/v2/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-title>Login</ion-title>
+    <ion-title>Cadastro</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -24,7 +24,12 @@
 
     <div class="row">
       <ion-list class="form-signin">
-        <h4 class="form-signin-heading" style="font-size: 1.1em" text-center>Entre com sua conta</h4>
+        <h4 class="form-signin-heading" style="font-size: 1.1em" text-center>Cadastre-se agora mesmo!</h4>
+
+        <ion-item>
+				  <ion-label class="sr-only" floating>Email</ion-label>
+				  <ion-input #txtEmail type="text" class="form-control" required></ion-input>
+        </ion-item>
 
         <ion-item>
 				  <ion-label class="sr-only" floating>Usuário</ion-label>
@@ -40,8 +45,7 @@
 
     <div class="row">
       <div class="col-md-2 col-md-offset-5" text-center>
-        <button ion-button [disabled]="txtUsername.value.length==0 || txtPassword.value.length==0" class="btn btn-lg btn-primary btn-block" style="background: #7BB557" (click)="doLogin(txtUsername.value, txtPassword.value, this, txtPassword)">Entrar</button>
-        <button ion-button color="danger" (click)="openRegister()">Cadastro</button>
+        <button ion-button [disabled]="txtEmail.value.length==0 || txtUsername.value.length==0 || txtPassword.value.length==0 || !isValidEmail(txtEmail.value)" class="btn btn-lg btn-primary btn-block" style="background: #7BB557" (click)="doRegister(txtEmail, txtUsername, txtPassword)">Cadastrar</button>
       </div>
     </div>
   </div>

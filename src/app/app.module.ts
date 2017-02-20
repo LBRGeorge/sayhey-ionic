@@ -1,3 +1,4 @@
+import { RegisterPage } from './../pages/register/register';
 import { LoginPage } from './../pages/login/login';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -20,6 +21,7 @@ export function provideStorage() {
   declarations: [
     MyApp,
     LoginPage,
+    RegisterPage,
     HomePage,
     JoinedPage,
     ChannelsPage,
@@ -32,6 +34,7 @@ export function provideStorage() {
   entryComponents: [
     MyApp,
     LoginPage,
+    RegisterPage,
     HomePage,
     JoinedPage,
     ChannelsPage,

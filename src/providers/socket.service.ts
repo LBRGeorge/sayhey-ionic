@@ -19,24 +19,7 @@ export class SocketService {
     listenOnGroupMessage: Function;
 
     constructor(public userService: UserService, public storage: Storage) {
-
-        this.getStorage()
-            .then((data) => {
-                if (this.socket == undefined && data.user_id != undefined && data.user_token != undefined)
-                {
-                    this.user_id = data.user_id;
-                    this.user_token = data.user_token;
-
-                    this.socket = io.connect(this.host);
-
-                    this.socket.on("connect", () => this.onConnect());
-                    this.socket.on("onlineUsers", (list) => this.onUsersOnline(list));
-                    
-                    this.socket.on("error", (error: string) => {
-                        console.log("Socket Connection Error ", error);
-                    });
-                }
-            });
+        this.start();
     }
 
     getStorage(): Promise<any> {
@@ -51,14 +34,23 @@ export class SocketService {
             .catch(error => console.log("Error on get user id", error));
     }
 
-    get() {
-        this.socket = io.connect(this.host);
+    start() {
+        this.getStorage()
+        .then((data) => {
+            if (this.socket == undefined && data.user_id != undefined && data.user_token != undefined)
+            {
+                this.user_id = data.user_id;
+                this.user_token = data.user_token;
 
-        this.socket.on("connect", () => this.onConnect());
-        this.socket.on("onlineUsers", (list) => this.onUsersOnline(list));
+                this.socket = io.connect(this.host);
 
-        this.socket.on("error", (error: string) => {
-            console.log("Socket Connection Error ", error);
+                this.socket.on("connect", () => this.onConnect());
+                this.socket.on("onlineUsers", (list) => this.onUsersOnline(list));
+                
+                this.socket.on("error", (error: string) => {
+                    console.log("Socket Connection Error ", error);
+                });
+            }
         });
     }
 
@@ -75,6 +67,15 @@ export class SocketService {
             GroupID: groupID,
             ContentID: contentID,
             Message: message
+        });
+    }
+
+    joinChannel(groupID: number, user: User)
+    {
+        this.socket.emit("joinGroup", {
+            GroupID: groupID,
+            UserID: user.ID,
+            Username: user.Username
         });
     }
 
