@@ -22,7 +22,7 @@
 <ion-content padding>
   <ol>
     <li *ngFor="let m of messages;trackBy:identify" class="answer {{m.UserID == localUser.ID ? 'right' : 'left'}} {{m.Sent == false ? 'sending': ''}}">
-      <p class="name">{{m.Username}}</p>
+      <p class="name" *ngIf="!isLastMessageMine(m)">{{m.Username}}</p>
 
       <p *ngIf="isMedia(m.Text)" class="text" >
         <ion-img width="100px" height="100px" src="catchMediaSource(m.Text)"></ion-img>
@@ -40,7 +40,7 @@
 <ion-footer>
   <ion-toolbar>
     <ion-item>
-      <ion-textarea #txtChat placeholder="Message..." required></ion-textarea>
+      <ion-input #txtChat type="text" placeholder="Message..." required></ion-input>
     </ion-item>
 
     <ion-buttons right>

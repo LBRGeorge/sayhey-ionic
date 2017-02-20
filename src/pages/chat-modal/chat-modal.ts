@@ -8,6 +8,8 @@ import { Component, ViewChild } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
 import { Content } from 'ionic-angular';
 
+import { LocalNotifications } from 'ionic-native';
+
 /*
   Generated class for the ChatModal page.
 
@@ -41,7 +43,7 @@ export class ChatModalPage {
     this.channelService.getChannelMessages(this.channel)
       .then((messages: Message[]) => {
         this.messages = messages;
-        setTimeout(() =>  this.content.scrollToBottom(), 500);
+        setTimeout(() =>  this.content.scrollToBottom(), 200);
       });
 
      this.socketService.getOnlineUsers(this.channel.ID);
@@ -112,6 +114,28 @@ export class ChatModalPage {
     setTimeout(() =>  this.content.scrollToBottom(), 200);
   }
 
+  isLastMessageMine(msg: Message): boolean {
+
+    if (this.messages.length > 0)
+    {
+      let index: number = 0;
+
+      for(let _msg of this.messages)
+      {
+        if (_msg.ID == msg.ID) break;
+        else index++;
+      }
+
+      if (index > 0)
+      {
+        let prev_msg = this.messages[index-1];
+
+        if (prev_msg.UserID == msg.UserID) return true;
+      }
+    }
+
+    return false;
+  }
 
   //EVENTS
   private onGroupMessageReceive(message){
@@ -140,6 +164,15 @@ export class ChatModalPage {
       this.messages.push(msg);
 
       setTimeout(() =>  this.content.scrollToBottom(), 200);
+
+      // Schedule a single notification
+      LocalNotifications.schedule({
+        id: msg.ID,
+        title: 'SayHey!',
+        text: this.channel + "@ " + msg.Username + ": " + msg.Text,
+        led: "0xff00ff00"
+      });
+
     }
   }
 }

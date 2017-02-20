@@ -1,8 +1,10 @@
 import { ChatModalPage } from './../chat-modal/chat-modal';
 import { UserService } from './../../providers/user-service';
 import { Channel } from './../../models/channel.model';
+import { LoginPage } from '../login/login';
+import { PopOverUserInfoPage } from '../pop-over-user-info/pop-over-user-info';
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, ModalController } from 'ionic-angular';
+import { App, NavController, NavParams, ModalController, PopoverController } from 'ionic-angular';
 
 /*
   Generated class for the Joined page.
@@ -19,8 +21,8 @@ export class JoinedPage implements OnInit {
 
   channels: Channel[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private modalCtrl: ModalController, private userService: UserService) { }
-
+  constructor(public navCtrl: NavController, public navParams: NavParams, private appCtrl: App, private modalCtrl: ModalController, private popoverCtrl: PopoverController, private userService: UserService) { }
+  
   ngOnInit(): void {
     this.userService.getUserChannels()
       .then((channels: Channel[]) => this.channels = channels);
@@ -29,6 +31,24 @@ export class JoinedPage implements OnInit {
   ionViewDidEnter() {
     this.userService.getUserChannels()
       .then((channels: Channel[]) => this.channels = channels);
+  }
+
+  presentPopover(ev) {
+
+    let popover = this.popoverCtrl.create(PopOverUserInfoPage);
+
+    popover.onDidDismiss(() => {
+      let comp = popover.component as PopOverUserInfoPage;
+
+      if (comp.result == true)
+      {
+        //this.appCtrl.getRootNav().setRoot(LoginPage);
+      }
+    });
+
+    popover.present({
+      ev: ev
+    });
   }
 
   openChat(channel: Channel): void{

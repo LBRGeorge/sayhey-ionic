@@ -62,6 +62,17 @@ export class UserService {
           .catch(error => console.log("Error ao realizar login ", error));
   }
 
+  userLogout(): Promise<boolean> {
+    return this.storage.remove("user_id")
+      .then((response_id) => {
+        return this.storage.remove("user_token")
+          .then((response_token) => {
+            if (response_id == undefined && response_token == undefined) return true;
+            else return false;
+          });
+      });
+  }
+
   userRegister(email: string, username: string, password: string): Promise<any> {
     return this.http.get(this.baseUri + "?api=register&textRegisterEmail=" + email + "&textRegisterUsername=" + username + "&textRegisterPassword=" + password)
       .toPromise()

@@ -10,6 +10,7 @@ import { ChannelsPage } from './../pages/channels/channels';
 import { JoinedPage } from './../pages/joined/joined';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { PopOverUserInfoPage } from '../pages/pop-over-user-info/pop-over-user-info';
 
 
 //Setting up storage
@@ -25,7 +26,8 @@ export function provideStorage() {
     HomePage,
     JoinedPage,
     ChannelsPage,
-    ChatModalPage
+    ChatModalPage,
+    PopOverUserInfoPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -38,7 +40,8 @@ export function provideStorage() {
     HomePage,
     JoinedPage,
     ChannelsPage,
-    ChatModalPage
+    ChatModalPage,
+    PopOverUserInfoPage
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},
