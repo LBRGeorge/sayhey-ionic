@@ -23,7 +23,7 @@ export class ChannelsPage {
   localUser: User;
   
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public toastCtrl: ToastController, public channelService: ChannelService, public userService: UserService, public socketService: SocketService) {
-    this.localUser = new User(0, "", "", "");
+    this.localUser = new User(0, "", "", "", "");
 
     //Get local user
     this.userService.getLocalUser()

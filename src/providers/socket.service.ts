@@ -63,7 +63,7 @@ export class SocketService {
         this.socket.emit("newMessage", {
             UserID: user.ID,
             Username: user.Username,
-            UserAvatar: "",
+            UserAvatar: user.Avatar,
             GroupID: groupID,
             ContentID: contentID,
             Message: message

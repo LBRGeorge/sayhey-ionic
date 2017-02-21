@@ -19,7 +19,7 @@ export class PopOverUserInfoPage {
   result: boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public alertCtrl: AlertController, public toastCtrl: ToastController, public userService: UserService) {
-    this.localUser = new User(0, "", "", "");
+    this.localUser = new User(0, "", "", "", "");
   }
 
   ngOnInit(){

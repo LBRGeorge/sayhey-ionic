@@ -33,7 +33,7 @@ export class ChatModalPage {
     this.channel = navParams.get('channel');
     //this.socketService.get();
     
-    this.localUser = new User(0, "", "", "");
+    this.localUser = new User(0, "", "", "", "");
 
     //Get local user
     this.userService.getLocalUser()
@@ -163,16 +163,17 @@ export class ChatModalPage {
 
       this.messages.push(msg);
 
-      setTimeout(() =>  this.content.scrollToBottom(), 200);
-
       // Schedule a single notification
       LocalNotifications.schedule({
-        id: msg.ID,
+        id: 1,
         title: 'SayHey!',
-        text: this.channel + "@ " + msg.Username + ": " + msg.Text,
-        led: "0xff00ff00"
+        text: message.Username + ": " + message.Message,
+        led: "00FF00"
       });
 
+      setTimeout(() => {
+        if (this.content != null) this.content.scrollToBottom();
+      }, 200);
     }
   }
 }
