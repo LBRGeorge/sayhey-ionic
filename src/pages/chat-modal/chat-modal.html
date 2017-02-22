@@ -20,7 +20,7 @@
       <p class="name" *ngIf="!isLastMessageMine(m)">{{m.Username}}</p>
 
       <p *ngIf="isMedia(m.Text)" class="text" >
-        <ion-img width="100px" height="100px" src="catchMediaSource(m.Text)"></ion-img>
+        <img width="100px" height="100px" src="{{catchMediaSource(m.Text)}}" (click)="showImage(catchMediaSource(m.Text))">
       </p>
 
       <p *ngIf="!isMedia(m.Text)" class="text" >
@@ -32,13 +32,24 @@
       </div>
       <p class="time">{{m.Date|date:'H:mm'}}</p>
     </li>
+
+      <li *ngFor="let m of typingUsers" class="answer preview">
+        <p class="name">{{m.Username}}</p>
+
+        <p class="text">{{m.Text}}</p>
+
+        <div class="avatar">
+          <img src="{{m.UserAvatar}}">
+          <div class="status online"></div>
+        </div>
+      </li>
   </ol>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
     <ion-item>
-      <ion-input #txtChat type="text" placeholder="Message..." required></ion-input>
+      <ion-input #txtChat type="text" placeholder="Message..." (keydown)="userTyping(txtChat)" required></ion-input>
     </ion-item>
 
     <ion-buttons right>

@@ -119,15 +119,16 @@ page-chat-modal {
 
     /*PREVIEW*/
     .answer.preview {
-        padding: 0 0 0 58px;
+        padding: 0 0 0 15px;
         text-align: left;
         float: left;
-        padding-bottom: 20px;
+        padding-bottom: 10px;
         opacity: 0.5;
     }
 
     .answer.preview .avatar {
-        left: 0;
+        left: 5px;
+        margin-top: -50px;
     }
     .answer.preview .avatar .status {
         right: 4px;

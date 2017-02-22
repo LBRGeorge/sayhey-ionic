@@ -77,6 +77,15 @@ export class SocketService {
         });
     }
 
+    userTyping(user: User, groupID: number, status: number, text: string) {
+        this.socket.emit("userTyping", {
+            UserID: user.ID,
+            GroupID: groupID,
+            Typing: status,
+            Text: text
+        });
+    }
+
     //EVENTS
 
     private onConnect() {

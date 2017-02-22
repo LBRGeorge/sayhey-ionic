@@ -5,10 +5,12 @@ import { User } from './../../models/user.model';
 import { Message } from './../../models/message.model';
 import { ChannelService } from './../../providers/channel-service';
 import { Channel } from './../../models/channel.model';
+import { PreviewMessage } from './../../models/preview-message.model';
 import { Component, ViewChild } from '@angular/core';
 import { NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
 import { Content } from 'ionic-angular';
 
+import { PhotoViewer } from 'ionic-native';
 import { LocalNotifications } from 'ionic-native';
 
 /*
@@ -29,6 +31,9 @@ export class ChatModalPage {
   channel: Channel;
   messages: Message[];
   localUser: User;
+
+  typingTimer: any;
+  typingUsers: PreviewMessage[] = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController, private modalCtrl: ModalController, private channelService: ChannelService, private userService: UserService, public socketService: SocketService) {
     this.channel = navParams.get('channel');
@@ -51,6 +56,7 @@ export class ChatModalPage {
      this.socketService.socket.on("onlineUsers", (list) => this.onUsersOnline(list));
      this.socketService.socket.on("userDisconnect", (data) => this.onUserDisconnect(data));
      this.socketService.socket.on("userConnect", (data) => this.onUserConnect(data));
+     this.socketService.socket.on("userGroupTyping", (data) => this.onUserTyping(data));
   }
 
 
@@ -128,6 +134,23 @@ export class ChatModalPage {
     setTimeout(() =>  this.content.scrollToBottom(), 200);
   }
 
+  userTyping(txtChat) {
+    if (txtChat.value.length > 0)
+    {
+      if (this.typingTimer != undefined) clearTimeout(this.typingTimer);
+
+      this.typingTimer = setTimeout(() => {
+        this.socketService.userTyping(this.localUser, this.channel.ID, 0, txtChat.value);
+      }, 5000);
+
+      this.socketService.userTyping(this.localUser, this.channel.ID, 1, txtChat.value);
+    }
+  }
+
+  showImage(image) {
+    PhotoViewer.show(image);
+  }
+
   isLastMessageMine(msg: Message): boolean {
 
     if (this.messages.length > 0)
@@ -163,6 +186,7 @@ export class ChatModalPage {
 
   //EVENTS
   private onGroupMessageReceive(message){
+    console.log("Message received from: " + message.Username);
 
     //Self message
     if (message.UserID == this.localUser.ID)
@@ -214,21 +238,55 @@ export class ChatModalPage {
   }
 
   private onUserConnect(data) {
-    for(let msg of this.messages)
+    if (this.messages != undefined)
     {
-      if (msg.UserID == data.UserID && data.UserID != this.localUser.ID)
+      for(let msg of this.messages)
       {
-        msg.UserStatus = 1;
+        if (msg.UserID == data.UserID && data.UserID != this.localUser.ID)
+        {
+          msg.UserStatus = 1;
+        }
       }
     }
   }
 
   private onUserDisconnect(data) {
-    for(let msg of this.messages)
+    if (this.messages != undefined)
     {
-      if (msg.UserID == data.UserID)
+      for(let msg of this.messages)
       {
-        msg.UserStatus = 0;
+        if (msg.UserID == data.UserID)
+        {
+          msg.UserStatus = 0;
+        }
+      }
+    }
+  }
+
+  private onUserTyping(data) {
+    let msg = data as PreviewMessage;
+
+    if (msg.GroupID == this.channel.ID && msg.UserID != this.localUser.ID)
+    {
+      let is_typing = this.typingUsers.find(p => p.UserID == msg.UserID);
+
+      if (msg.Typing == 0 && is_typing != undefined)
+      {
+        let index = this.typingUsers.indexOf(msg);
+
+        this.typingUsers.splice(index, 1);
+      }
+
+      if (msg.Typing == 1)
+      {
+        if (is_typing == undefined)
+        {
+          this.typingUsers.push(msg);
+          setTimeout(() =>  this.content.scrollToBottom(), 200);
+        }
+        else {
+          is_typing.Text = msg.Text;
+        }
       }
     }
   }
