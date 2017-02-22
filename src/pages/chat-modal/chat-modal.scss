@@ -6,8 +6,37 @@ page-chat-modal {
         clear: both;
     }
 
+    .answer .avatar {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    }
+    .answer .avatar img {
+        display: block;
+        border-radius: 20px;
+        height: 100%;
+    }
+    .answer .avatar .status.offline {
+        border: 1px solid #5a5a5a;
+        background: #ffffff;
+    }
+    .answer .avatar .status.online {
+        background: #4caf50;
+    }
+    .answer .avatar .status.busy {
+        background: #ffc107;
+    }
+    .answer .avatar .status {
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        position: absolute;
+        left: 25px;
+        margin-top: -10px;
+    }
+
     .answer.left {
-        padding: 0 0 0 10px;
+        padding: 0 0 0 15px;
         text-align: left;
         float: left;
     }
@@ -21,8 +50,8 @@ page-chat-modal {
         border-radius: 8px 8px 8px 0;
     }
     .answer .text {
-        padding: 12px;
-        font-size: 16px;
+        padding: 5px;
+        font-size: 13px;
         line-height: 26px;
         position: relative;
     }
@@ -46,9 +75,18 @@ page-chat-modal {
     .answer .time {
         font-size: 12px;
     }
+    .answer.left .avatar {
+        left: 5px;
+        margin-top: -50px;
+    }
+
+    .answer .avatar {
+        /*bottom: 1px;*/
+    }
+
     /*RIGHT*/
     .answer.right {
-        padding: 0 10px 0 0;
+        padding: 0 20px 0 0;
         text-align: right;
         float: right;
     }

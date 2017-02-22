@@ -1,3 +1,4 @@
+import { ChannelInfoPage } from './../pages/channel-info/channel-info';
 import { RegisterPage } from './../pages/register/register';
 import { LoginPage } from './../pages/login/login';
 import { NgModule, ErrorHandler } from '@angular/core';
@@ -27,7 +28,8 @@ export function provideStorage() {
     JoinedPage,
     ChannelsPage,
     ChatModalPage,
-    PopOverUserInfoPage
+    PopOverUserInfoPage,
+    ChannelInfoPage
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -41,7 +43,8 @@ export function provideStorage() {
     JoinedPage,
     ChannelsPage,
     ChatModalPage,
-    PopOverUserInfoPage
+    PopOverUserInfoPage,
+    ChannelInfoPage
   ],
   providers: [
     {provide: ErrorHandler, useClass: IonicErrorHandler},

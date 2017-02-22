@@ -45,7 +45,6 @@ export class SocketService {
                 this.socket = io.connect(this.host);
 
                 this.socket.on("connect", () => this.onConnect());
-                this.socket.on("onlineUsers", (list) => this.onUsersOnline(list));
                 
                 this.socket.on("error", (error: string) => {
                     console.log("Socket Connection Error ", error);
@@ -55,7 +54,6 @@ export class SocketService {
     }
 
     getOnlineUsers(groupID: number){
-        console.log("Getting online users");
         this.socket.emit("getOnlineUsers", {GroupID: groupID});
     }
 
@@ -96,9 +94,5 @@ export class SocketService {
             this.socket.emit("setupUser", {ID: this.user_id, Username: "George", Groups: groups});
             console.log("> Socket Connected! " + JSON.stringify(groups));
         });
-    }
-
-    private onUsersOnline(list) {
-        console.log(list);
     }
 }

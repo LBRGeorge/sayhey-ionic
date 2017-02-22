@@ -1,3 +1,4 @@
+import { ChannelInfoPage } from './../channel-info/channel-info';
 import { SocketService } from './../../providers/socket.service';
 import { UserService } from './../../providers/user-service';
 import { User } from './../../models/user.model';
@@ -5,7 +6,7 @@ import { Message } from './../../models/message.model';
 import { ChannelService } from './../../providers/channel-service';
 import { Channel } from './../../models/channel.model';
 import { Component, ViewChild } from '@angular/core';
-import { NavController, NavParams, ViewController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, ModalController } from 'ionic-angular';
 import { Content } from 'ionic-angular';
 
 import { LocalNotifications } from 'ionic-native';
@@ -29,10 +30,9 @@ export class ChatModalPage {
   messages: Message[];
   localUser: User;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController, private channelService: ChannelService, private userService: UserService, public socketService: SocketService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController, private modalCtrl: ModalController, private channelService: ChannelService, private userService: UserService, public socketService: SocketService) {
     this.channel = navParams.get('channel');
-    //this.socketService.get();
-    
+
     this.localUser = new User(0, "", "", "", "");
 
     //Get local user
@@ -43,17 +43,30 @@ export class ChatModalPage {
     this.channelService.getChannelMessages(this.channel)
       .then((messages: Message[]) => {
         this.messages = messages;
+        this.socketService.getOnlineUsers(this.channel.ID);
         setTimeout(() =>  this.content.scrollToBottom(), 200);
       });
 
-     this.socketService.getOnlineUsers(this.channel.ID);
-
      this.socketService.socket.on("userGroupMessage", (message) => this.onGroupMessageReceive(message));
+     this.socketService.socket.on("onlineUsers", (list) => this.onUsersOnline(list));
+     this.socketService.socket.on("userDisconnect", (data) => this.onUserDisconnect(data));
+     this.socketService.socket.on("userConnect", (data) => this.onUserConnect(data));
   }
 
 
-  close(){
-    this.viewCtrl.dismiss();
+  ionViewDidLoad() {
+    this.displayTab(false);
+  }
+
+  ionViewWillLeave() {
+    this.displayTab(true);
+  }
+
+  openInfo() {
+    let modal = this.modalCtrl.create(ChannelInfoPage, {channel: this.channel});
+    modal.present();
+
+    //this.navCtrl.push(ChannelInfoPage, {channel: this.channel});
   }
 
   loadMedia(media: string) {
@@ -103,6 +116,7 @@ export class ChatModalPage {
       date.getMilliseconds(),
       this.localUser.ID,
       this.localUser.Username,
+      this.localUser.Avatar,
       msg,
       date.toString(),
       false
@@ -137,6 +151,16 @@ export class ChatModalPage {
     return false;
   }
 
+  private displayTab(display:boolean) {
+    let elements = document.querySelectorAll(".tabbar");
+
+    if (elements != null) {
+        Object.keys(elements).map((key) => {
+            elements[key].style.display = display ? 'flex' : 'none';
+        });
+    }
+  }
+
   //EVENTS
   private onGroupMessageReceive(message){
 
@@ -157,10 +181,12 @@ export class ChatModalPage {
         message.MessageID,
         message.UserID,
         message.Username,
+        message.UserAvatar,
         message.Message,
         message.Date
       );
 
+      console.log("New msg avatar: " + message.UserAvatar);
       this.messages.push(msg);
 
       // Schedule a single notification
@@ -174,6 +200,36 @@ export class ChatModalPage {
       setTimeout(() => {
         if (this.content != null) this.content.scrollToBottom();
       }, 200);
+    }
+  }
+
+  private onUsersOnline(list) {
+    for(let msg of this.messages)
+    {
+      if (list.indexOf(msg.UserID) != -1)
+      {
+        msg.UserStatus = 1;
+      }
+    }
+  }
+
+  private onUserConnect(data) {
+    for(let msg of this.messages)
+    {
+      if (msg.UserID == data.UserID && data.UserID != this.localUser.ID)
+      {
+        msg.UserStatus = 1;
+      }
+    }
+  }
+
+  private onUserDisconnect(data) {
+    for(let msg of this.messages)
+    {
+      if (msg.UserID == data.UserID)
+      {
+        msg.UserStatus = 0;
+      }
     }
   }
 }

@@ -52,14 +52,16 @@ export class JoinedPage implements OnInit {
   }
 
   openChat(channel: Channel): void{
-    let modal = this.modalCtrl.create(ChatModalPage, {channel: channel});
+    /*let modal = this.modalCtrl.create(ChatModalPage, {channel: channel});
 
     modal.onDidDismiss(() => {
       this.userService.getUserChannels()
       .then((channels: Channel[]) => this.channels = channels);
     });
     
-    modal.present();
+    modal.present();*/
+
+    this.navCtrl.push(ChatModalPage, {channel: channel});
   }
 
 }

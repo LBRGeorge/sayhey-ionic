@@ -7,21 +7,16 @@
 <ion-header>
 
   <ion-navbar color="primary">
-    <ion-buttons start>
-      <button ion-button (click)="close()">
-        <ion-icon name="close"></ion-icon>
-      </button>
-    </ion-buttons>
-
-    <ion-title>{{channel.Name}}</ion-title>
+    <ion-title (click)="openInfo()">{{channel.Name}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <ol>
     <li *ngFor="let m of messages;trackBy:identify" class="answer {{m.UserID == localUser.ID ? 'right' : 'left'}} {{m.Sent == false ? 'sending': ''}}">
+      
       <p class="name" *ngIf="!isLastMessageMine(m)">{{m.Username}}</p>
 
       <p *ngIf="isMedia(m.Text)" class="text" >
@@ -31,7 +26,10 @@
       <p *ngIf="!isMedia(m.Text)" class="text" >
         {{m.Text}}
       </p>
-
+      <div *ngIf="m.UserID != localUser.ID && !isLastMessageMine(m)" class="avatar">
+        <img src="{{m.Avatar}}">
+        <div class="status {{m.UserStatus == 0 ? 'offline' : 'online'}}"></div>
+      </div>
       <p class="time">{{m.Date|date:'H:mm'}}</p>
     </li>
   </ol>
