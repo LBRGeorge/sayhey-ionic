@@ -86,7 +86,7 @@ export class JoinedPage implements OnInit {
       channel.LastMessageDate = message.Date;
 
       NativeAudio.play('notification1').then();
-      Vibration.vibrate(1000);
+      Vibration.vibrate(500);
     }
   }
 
