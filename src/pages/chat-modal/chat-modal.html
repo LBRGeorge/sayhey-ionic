@@ -20,7 +20,7 @@
       <p class="name" *ngIf="!isLastMessageMine(m)">{{m.Username}}</p>
 
       <p *ngIf="isMedia(m.Text)" class="text" >
-        <img width="100px" height="100px" src="{{catchMediaSource(m.Text)}}" (click)="showImage(catchMediaSource(m.Text))">
+        <img width="200px" height="200px" src="{{catchMediaSource(m.Text)}}" (click)="showImage(catchMediaSource(m.Text))">
       </p>
 
       <p *ngIf="!isMedia(m.Text)" class="text" >

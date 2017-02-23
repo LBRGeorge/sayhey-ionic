@@ -1,6 +1,5 @@
 import { User } from './../../models/user.model';
 import { UserService } from './../../providers/user-service';
-import { Storage } from '@ionic/storage';
 import { LoginPage } from './../login/login';
 import { SocketService } from './../../providers/socket.service';
 import { ChannelsPage } from './../channels/channels';
@@ -8,6 +7,8 @@ import { JoinedPage } from './../joined/joined';
 import { Component } from '@angular/core';
 import { NavController, LoadingController } from 'ionic-angular';
 
+import { BackgroundMode } from 'ionic-native';
+import {NativeAudio} from 'ionic-native';
 
 @Component({
   selector: 'page-home',
@@ -30,10 +31,14 @@ export class HomePage {
       {
         this.navCtrl.setRoot(LoginPage);
       }
-      else this.socketService.start();
+      else {
+        BackgroundMode.enable();
+        this.socketService.start();
+      }
     })
     .catch(error => console.log("Error ", error));
 
+    NativeAudio.preloadSimple('notification1', 'assets/sound.mp3').then(() => console.log("Sound loaded!"), (error) => console.log("Failed to load sound!", error));
     //this.socketService.get();
   }
 

@@ -147,8 +147,18 @@ export class ChatModalPage {
     }
   }
 
-  showImage(image) {
-    PhotoViewer.show(image);
+  showImage(image: string) {
+    let dot = image.lastIndexOf('.');
+
+    if (dot != -1)
+    {
+      let ext = image.slice(dot);
+
+      if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".bmp")
+      {
+        PhotoViewer.show(image);
+      }
+    }
   }
 
   isLastMessageMine(msg: Message): boolean {

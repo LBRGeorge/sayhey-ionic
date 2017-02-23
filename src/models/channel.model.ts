@@ -11,6 +11,7 @@ export class Channel {
         public Image: string,
         public Users: Array<any>,
         public LastMessage: string,
+        public LastMessageUser: string,
         public LastMessageDate: string
     ) {}
 }

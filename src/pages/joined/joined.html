@@ -22,7 +22,7 @@
   <ion-list>
     <ion-item *ngFor="let c of channels" (click)="openChat(c)">
       <h2>{{c.Name}}</h2>
-      <p>{{c.LastMessage}}</p>
+      <p *ngIf="c.LastMessage.length > 0"><strong>{{c.LastMessageUser}}:</strong> {{c.LastMessage}}</p>
       <ion-note item-right>{{c.LastMessageDate|date: 'H:mm'}}</ion-note>
     </ion-item>
   </ion-list>

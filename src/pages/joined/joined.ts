@@ -1,10 +1,13 @@
+import { SocketService } from './../../providers/socket.service';
 import { ChatModalPage } from './../chat-modal/chat-modal';
 import { UserService } from './../../providers/user-service';
 import { Channel } from './../../models/channel.model';
-import { LoginPage } from '../login/login';
 import { PopOverUserInfoPage } from '../pop-over-user-info/pop-over-user-info';
 import { Component, OnInit } from '@angular/core';
 import { App, NavController, NavParams, ModalController, PopoverController } from 'ionic-angular';
+
+import { NativeAudio } from 'ionic-native';
+import { Vibration } from 'ionic-native';
 
 /*
   Generated class for the Joined page.
@@ -21,7 +24,11 @@ export class JoinedPage implements OnInit {
 
   channels: Channel[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private appCtrl: App, private modalCtrl: ModalController, private popoverCtrl: PopoverController, private userService: UserService) { }
+  constructor(public navCtrl: NavController, public navParams: NavParams, private appCtrl: App, private modalCtrl: ModalController, private popoverCtrl: PopoverController, private userService: UserService, private socketService: SocketService) { 
+    setTimeout(() => {
+      this.socketService.socket.on("userGroupMessage", (message) => this.onGroupMessageReceive(message));
+    }, 1000);
+  }
   
   ngOnInit(): void {
     this.userService.getUserChannels()
@@ -62,6 +69,25 @@ export class JoinedPage implements OnInit {
     modal.present();*/
 
     this.navCtrl.push(ChatModalPage, {channel: channel});
+  }
+
+
+
+  //EVENTS
+  private onGroupMessageReceive(message){
+    console.log("Message received from: " + message.Username);
+
+    let channel = this.channels.find(p => p.ID == message.GroupID);
+
+    if (channel != undefined)
+    {
+      channel.LastMessage = message.Message;
+      channel.LastMessageUser = message.Username;
+      channel.LastMessageDate = message.Date;
+
+      NativeAudio.play('notification1').then();
+      Vibration.vibrate(1000);
+    }
   }
 
 }
