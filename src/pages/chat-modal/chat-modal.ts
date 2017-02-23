@@ -11,7 +11,6 @@ import { NavController, NavParams, ViewController, ModalController } from 'ionic
 import { Content } from 'ionic-angular';
 
 import { PhotoViewer } from 'ionic-native';
-import { LocalNotifications } from 'ionic-native';
 
 /*
   Generated class for the ChatModal page.
@@ -38,9 +37,8 @@ export class ChatModalPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController, private modalCtrl: ModalController, private channelService: ChannelService, private userService: UserService, public socketService: SocketService) {
     this.channel = navParams.get('channel');
 
-    this.localUser = new User(0, "", "", "", "");
-
     //Get local user
+    this.localUser = new User(0, "", "", "", "");
     this.userService.getLocalUser()
       .then((user: User) => this.localUser = user);
 
@@ -61,6 +59,7 @@ export class ChatModalPage {
 
 
   ionViewDidLoad() {
+    if (this.navCtrl.getActive() != undefined) console.log("> chat: " + this.navCtrl.getActive().name);
     this.displayTab(false);
   }
 
@@ -154,6 +153,7 @@ export class ChatModalPage {
     {
       let ext = image.slice(dot);
 
+      console.log("> "+ext);
       if (ext == ".png" || ext == ".jpg" || ext == ".jpeg" || ext == ".bmp")
       {
         PhotoViewer.show(image);
@@ -220,16 +220,7 @@ export class ChatModalPage {
         message.Date
       );
 
-      console.log("New msg avatar: " + message.UserAvatar);
       this.messages.push(msg);
-
-      // Schedule a single notification
-      LocalNotifications.schedule({
-        id: 1,
-        title: 'SayHey!',
-        text: message.Username + ": " + message.Message,
-        led: "00FF00"
-      });
 
       setTimeout(() => {
         if (this.content != null) this.content.scrollToBottom();

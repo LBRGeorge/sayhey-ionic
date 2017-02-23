@@ -12,6 +12,7 @@ export class Channel {
         public Users: Array<any>,
         public LastMessage: string,
         public LastMessageUser: string,
-        public LastMessageDate: string
+        public LastMessageDate: string,
+        public UnreadCount: number = 0
     ) {}
 }

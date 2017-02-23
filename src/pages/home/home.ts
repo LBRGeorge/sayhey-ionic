@@ -5,7 +5,7 @@ import { SocketService } from './../../providers/socket.service';
 import { ChannelsPage } from './../channels/channels';
 import { JoinedPage } from './../joined/joined';
 import { Component } from '@angular/core';
-import { NavController, LoadingController } from 'ionic-angular';
+import { Platform, NavController, LoadingController } from 'ionic-angular';
 
 import { BackgroundMode } from 'ionic-native';
 import {NativeAudio} from 'ionic-native';
@@ -19,7 +19,7 @@ export class HomePage {
   tabRoot1: any;
   tabRoot2: any;
 
-  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController, public socketService: SocketService, public userService: UserService) {
+  constructor(private platform: Platform, public navCtrl: NavController, public loadingCtrl: LoadingController, public socketService: SocketService, public userService: UserService) {
     
     this.tabRoot1 = JoinedPage;
     this.tabRoot2 = ChannelsPage;
@@ -39,7 +39,21 @@ export class HomePage {
     .catch(error => console.log("Error ", error));
 
     NativeAudio.preloadSimple('notification1', 'assets/sound.mp3').then(() => console.log("Sound loaded!"), (error) => console.log("Failed to load sound!", error));
-    //this.socketService.get();
+
+    platform.registerBackButtonAction(() => this.avoidCloseApp());
   }
 
+  avoidCloseApp() {
+    if (this.navCtrl != undefined)
+    {
+      if (this.navCtrl.getActive().name != "JoinedPage")
+      {
+        this.navCtrl.pop();
+        return;
+      }
+      else {
+        window['plugins'].appMinimize.minimize();
+      }
+    }
+  }
 }

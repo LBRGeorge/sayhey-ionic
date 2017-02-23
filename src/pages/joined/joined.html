@@ -18,12 +18,24 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
   <ion-list>
     <ion-item *ngFor="let c of channels" (click)="openChat(c)">
+      <ion-avatar item-left>
+        <img src="{{c.Image}}">
+      </ion-avatar>
+
       <h2>{{c.Name}}</h2>
       <p *ngIf="c.LastMessage.length > 0"><strong>{{c.LastMessageUser}}:</strong> {{c.LastMessage}}</p>
-      <ion-note item-right>{{c.LastMessageDate|date: 'H:mm'}}</ion-note>
+      
+      <div class="container" item-right>
+        <div class="row">
+          <ion-note>{{c.LastMessageDate|date: 'H:mm'}}</ion-note>
+        </div>
+        <div class="row" *ngIf="c.UnreadCount > 0">
+          <ion-badge>{{c.UnreadCount}}</ion-badge>
+        </div>
+      </div>
     </ion-item>
   </ion-list>
 </ion-content>
