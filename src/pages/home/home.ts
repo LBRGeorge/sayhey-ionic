@@ -7,7 +7,7 @@ import { JoinedPage } from './../joined/joined';
 import { Component } from '@angular/core';
 import { Platform, NavController, LoadingController } from 'ionic-angular';
 
-import { BackgroundMode } from 'ionic-native';
+//import { BackgroundMode } from 'ionic-native';
 import {NativeAudio} from 'ionic-native';
 
 @Component({
@@ -32,7 +32,6 @@ export class HomePage {
         this.navCtrl.setRoot(LoginPage);
       }
       else {
-        BackgroundMode.enable();
         this.socketService.start();
       }
     })
