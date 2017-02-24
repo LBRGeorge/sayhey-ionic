@@ -39,7 +39,7 @@ export class HomePage {
 
     NativeAudio.preloadSimple('notification1', 'assets/sound.mp3').then(() => console.log("Sound loaded!"), (error) => console.log("Failed to load sound!", error));
 
-    platform.registerBackButtonAction(() => this.avoidCloseApp());
+    //platform.registerBackButtonAction(() => this.avoidCloseApp());
   }
 
   avoidCloseApp() {

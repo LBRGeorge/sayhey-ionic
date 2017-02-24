@@ -130,6 +130,7 @@ export class JoinedPage implements OnInit {
                 id: 1,
                 title: 'SayHey!',
                 text: this.notificationsMessages,
+                sound: null,
                 led: "00FF00"
               });
             }
@@ -138,6 +139,7 @@ export class JoinedPage implements OnInit {
                 id: id,
                 title: 'SayHey!',
                 text: this.notificationsMessages,
+                sound: null,
                 led: "00FF00"
               });
             }
