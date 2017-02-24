@@ -49,7 +49,7 @@
 <ion-footer>
   <ion-toolbar>
     <ion-item>
-      <ion-input #txtChat type="text" placeholder="Message..." (keydown)="userTyping(txtChat)" required></ion-input>
+      <ion-textarea rows="1" #txtChat id="messag_input" type="text" spellcheck="true" placeholder="Message..." (keydown)="userTyping(txtChat)" (input)="resizeBox()" required></ion-textarea>
     </ion-item>
 
     <ion-buttons right>

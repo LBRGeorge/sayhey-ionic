@@ -7,9 +7,8 @@ import { PopOverUserInfoPage } from '../pop-over-user-info/pop-over-user-info';
 import { Component, OnInit } from '@angular/core';
 import { App, NavController, NavParams, ModalController, PopoverController } from 'ionic-angular';
 
-import { NativeAudio } from 'ionic-native';
+import { NativeAudio, LocalNotifications } from 'ionic-native';
 import { Vibration } from 'ionic-native';
-import { LocalNotifications } from 'ionic-native';
 
 /*
   Generated class for the Joined page.
@@ -87,6 +86,8 @@ export class JoinedPage implements OnInit {
 
     channel.UnreadCount = 0;
     this.navCtrl.push(ChatModalPage, {channel: channel});
+
+    LocalNotifications.clearAll();
   }
 
 
