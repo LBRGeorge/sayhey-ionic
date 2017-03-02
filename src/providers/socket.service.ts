@@ -42,7 +42,7 @@ export class SocketService {
                 this.user_id = data.user_id;
                 this.user_token = data.user_token;
 
-                this.socket = io.connect(this.host);
+                this.socket = io.connect(this.host, {query: "user=" + data.user_id + "&token=" + data.user_token});
 
                 this.socket.on("connect", () => this.onConnect());
                 

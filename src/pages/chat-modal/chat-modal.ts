@@ -152,7 +152,12 @@ export class ChatModalPage {
     this.messages.push(message);
 
     this.socketService.sendGroupMessage(this.localUser, this.channel.ID, msg, date.getMilliseconds());
-    setTimeout(() =>  this.content.scrollToBottom(), 200);
+    setTimeout(() =>  {
+      if (this.content != null)
+      {
+        this.content.scrollToBottom();
+      }
+    }, 200);
   }
 
   userTyping(txtChat) {
@@ -251,9 +256,10 @@ export class ChatModalPage {
   }
 
   private onUsersOnline(list) {
+    console.log("Online users: " + JSON.stringify(list));
     for(let msg of this.messages)
     {
-      if (list.indexOf(msg.UserID) != -1)
+      if (list.find(p => p == msg.UserID) != undefined)
       {
         msg.UserStatus = 1;
       }

@@ -5,7 +5,7 @@ import { Channel } from './../../models/channel.model';
 import { User } from './../../models/user.model';
 import { PopOverUserInfoPage } from '../pop-over-user-info/pop-over-user-info';
 import { Component, OnInit } from '@angular/core';
-import { App, NavController, NavParams, ModalController, PopoverController } from 'ionic-angular';
+import { App, NavController, NavParams, ModalController, PopoverController, ToastController } from 'ionic-angular';
 
 import { NativeAudio, LocalNotifications } from 'ionic-native';
 import { Vibration } from 'ionic-native';
@@ -29,7 +29,7 @@ export class JoinedPage implements OnInit {
 
   notificationsMessages: string = "";
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private appCtrl: App, private modalCtrl: ModalController, private popoverCtrl: PopoverController, private userService: UserService, private socketService: SocketService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private appCtrl: App, private modalCtrl: ModalController, private popoverCtrl: PopoverController, private toastCtrl: ToastController, private userService: UserService, private socketService: SocketService) {
     
     this.startSocket = setInterval(() => {
       if (this.socketService.socket != undefined)
@@ -40,6 +40,7 @@ export class JoinedPage implements OnInit {
           .then((user: User) => {
             this.localUser = user;
             this.socketService.socket.on("userGroupMessage", (message) => this.onGroupMessageReceive(message));
+            this.socketService.socket.on("disconnect", () => this.onDisconnect());
           });
         clearInterval(this.startSocket);
       }
@@ -148,6 +149,17 @@ export class JoinedPage implements OnInit {
           (error) => console.log("Couldn't display notification", error));
       }
     }
+  }
+
+  private onDisconnect() {
+      let toast = this.toastCtrl.create({
+        message: "Servidor desconectado!",
+        duration: 30000,
+        closeButtonText: "OK",
+        showCloseButton: true
+      });
+
+      toast.present();
   }
 
 }
