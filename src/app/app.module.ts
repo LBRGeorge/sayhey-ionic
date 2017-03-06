@@ -13,6 +13,25 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { PopOverUserInfoPage } from '../pages/pop-over-user-info/pop-over-user-info';
 
+import { CloudSettings, CloudModule } from '@ionic/cloud-angular';
+const cloudSettings: CloudSettings = {
+  'core': {
+    'app_id': 'a74232ed',
+  },
+  'push': {
+    'sender_id': '909429217814',
+    'pluginConfig': {
+      'ios': {
+        'badge': true,
+        'sound': true
+      },
+      'android': {
+        'iconColor': '#343434'
+      }
+    }
+  }
+};
+
 
 //Setting up storage
 export function provideStorage() {
@@ -32,7 +51,8 @@ export function provideStorage() {
     ChannelInfoPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    CloudModule.forRoot(cloudSettings)
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -39,15 +39,15 @@ export class HomePage {
 
     NativeAudio.preloadSimple('notification1', 'assets/sound.mp3').then(() => console.log("Sound loaded!"), (error) => console.log("Failed to load sound!", error));
 
-    platform.registerBackButtonAction(() => this.avoidCloseApp());
+    //platform.registerBackButtonAction(() => this.avoidCloseApp());
   }
 
   avoidCloseApp() {
     if (this.navCtrl != undefined)
     {
-      if (this.navCtrl.getActive().name != "JoinedPage")
+      if (this.navCtrl.canGoBack)
       {
-        this.navCtrl.pop();
+        this.navCtrl.popToRoot();
         return;
       }
       else {
