@@ -46,10 +46,13 @@ export class JoinedPage implements OnInit {
             if (this.platform.is('cordova'))
             {
               this.push.register().then((t: PushToken) => {
-                alert("token: " + t.token);
                 return this.push.saveToken(t);
               }).then((t: PushToken) => {
                 console.log('Token saved:', t.token);
+                this.userService.saveFCMToken(t.token)
+                  .then((result: boolean) => {
+                    if (result == false) alert("Falha ao salvar fcm token");
+                  });
               });
 
               this.push.rx.notification()

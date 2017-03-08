@@ -126,4 +126,19 @@ export class UserService {
           .catch(error => console.log("Erro ao autenticar usuário", error));
       });
   }
+
+  saveFCMToken(token: string): Promise<boolean> {
+    return this.getStorage()
+      .then((data) => {
+        return this.http.get(this.baseUri + "?api=save_fcmtoken&fcm_token=" + token + "&userid=" + data.user_id + "&token=" + data.user_token)
+          .toPromise()
+          .then(response => {
+            let result = response.json();
+
+            if (result.Error.length > 0) return false;
+            else return true;
+          })
+          .catch(error => console.log("Erro ao autenticar usuário", error));
+      });
+  }
 }
