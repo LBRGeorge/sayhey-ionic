@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
-import { StatusBar, Splashscreen, PowerManagement } from 'ionic-native';
+import { StatusBar, Splashscreen, PowerManagement, BackgroundMode } from 'ionic-native';
 import {Push, PushToken} from '@ionic/cloud-angular';
 
 import { HomePage } from '../pages/home/home';
@@ -20,39 +20,9 @@ export class MyApp {
       Splashscreen.hide();
       StatusBar.styleDefault();
 
-      this.push.register().then((t: PushToken) => {
-        return this.push.saveToken(t);
-      }).then((t: PushToken) => {
-        console.log('Token saved:', t.token);
-      });
+      /*cordova.plugins.backgroundMode.enable();*/
 
-      this.push.rx.notification()
-        .subscribe((msg) => {
-          alert(msg.title + ': ' + msg.text);
-      });
-
-      /*var push = PushNotification.init({
-        android: {
-            senderID: "12345679"
-        },
-        browser: {
-            pushServiceURL: 'http://push.api.phonegap.com/v1/push'
-        },
-        ios: {
-            alert: "true",
-            badge: true,
-            sound: 'false'
-        },
-        windows: {}
-    });*/
-
-      /*this.push.register().then((t: PushToken) => {
-        return this.push.saveToken(t);
-      }).then((t: PushToken) => {
-        console.log('Token saved:', t.token);
-      });
-
-      cordova.plugins.backgroundMode.enable();*/
+      BackgroundMode.enable();
 
       PowerManagement.dim()
         .then(() => {
