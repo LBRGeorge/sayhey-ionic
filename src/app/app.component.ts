@@ -1,7 +1,9 @@
+declare var cordova;
+
 import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
-import { StatusBar, Splashscreen, PowerManagement, BackgroundMode } from 'ionic-native';
-import {Push, PushToken} from '@ionic/cloud-angular';
+import { Platform, LoadingController } from 'ionic-angular';
+import { StatusBar, Splashscreen, PowerManagement, BackgroundMode, HeaderColor } from 'ionic-native';
+import {Push, PushToken, Deploy} from '@ionic/cloud-angular';
 
 import { HomePage } from '../pages/home/home';
 
@@ -12,7 +14,7 @@ import { HomePage } from '../pages/home/home';
 export class MyApp {
   rootPage = HomePage;
 
-  constructor(private platform: Platform, public push: Push) {
+  constructor(private platform: Platform, public push: Push, public deploy: Deploy, public loadingCtrl: LoadingController) {
 
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -20,9 +22,43 @@ export class MyApp {
       Splashscreen.hide();
       StatusBar.styleDefault();
 
+      //Update app if there's new deploys
+      this.deploy.check().then((snapshotAvailable: boolean) => {
+        if (snapshotAvailable){
+          let loading = this.loadingCtrl.create({
+            content: "Atualizando aplicativo...",
+          });
+
+          loading.present();
+          this.deploy.download().then(() => {
+            return this.deploy.extract().then(() => {
+              loading.dismiss();
+              alert("Aplicativo atualizado com sucesso!");
+              this.deploy.load();
+            });
+          });
+        }
+        /*else {
+          this.deploy.getSnapshots().then((snapshots) => {
+            // snapshots will be an array of snapshot uuids
+
+            for(let id of snapshots)
+            {
+              this.deploy.deleteSnapshot(id);
+            }
+          });
+        }*/
+      });
+
+      if (this.platform.is('android'))
+      {
+        HeaderColor.tint("#62599C");
+        cordova.plugins.autoStart.enable();
+      }
+
       /*cordova.plugins.backgroundMode.enable();*/
 
-      BackgroundMode.enable();
+      //BackgroundMode.enable();
 
       PowerManagement.dim()
         .then(() => {
